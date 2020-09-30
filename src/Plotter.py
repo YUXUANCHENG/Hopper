@@ -11,18 +11,16 @@ class BasePlot:
 
 class PlotCircle(BasePlot):
     def __init__(self, positions):
-        self.circles = []
-        self.ax = []
-        try:
-            self.create_circle(positions)
-            self.add_line(positions)
-            self.show_shapes()
-        except ValueError as e:
-            print(e)
-
-    def create_circle(self, positions):
         if len(positions) == 0:
             raise ValueError("empty circle list!")
+        self.circles = []
+        self.ax = []
+        for position in positions:
+            self.create_circle(position)
+            self.add_line(position)
+            self.show_shapes()
+
+    def create_circle(self, positions):
         for (x, y, r) in np.reshape(positions,(-1,3)):
             self.circles.append(plt.Circle((x, y), radius= r))
         
