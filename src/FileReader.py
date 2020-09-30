@@ -25,10 +25,12 @@ class Reader(Base):
         for file in self.file_list:
             if self.content.size:
                 new_data = np.loadtxt(file)
+                if len(new_data) == 0:
+                    continue
                 if self.content.shape[1] == new_data.shape[1]:
                     self.content = np.concatenate((self.content, new_data), axis = 0)
                 else:
-                    print("changing format\n")
+                    print("changing format")
                     self.padding(new_data)
             else:
                 self.content = np.loadtxt(file) 
@@ -66,6 +68,8 @@ class NewData:
     def __init__(self, content):
         self.n_trial = len(content)
         self.N = content[:, 0]
+        if len(self.N) == 0:
+            raise ValueError("empty data set!")
         self.N = np.array([int(x) for x in self.N])
         self.position = []
         self._get_position(content)
