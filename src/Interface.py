@@ -1,6 +1,9 @@
 # Yuxuan Cheng
 # Interface class
 import numpy as np
+import os
+from os import listdir
+from os.path import isfile, join
 from FileReader import Reader, NewData, OldData
 
 class Processor(Reader):
@@ -48,8 +51,13 @@ class Processor(Reader):
 
 
 if __name__ == "__main__":
-    processor = Processor(["./data/sav-n250-w40-g01d.txt"], NewData)
+    abspath = os.path.abspath(__file__)
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
+    mypath = "../data"
+    onlyfiles = [join(mypath, f) for f in listdir(mypath) if isfile(join(mypath, f))]
+    processor = Processor(onlyfiles, NewData)
     processor.cal_angles()
-    print(processor.angles)
+    print(len(processor.angles))
     
 

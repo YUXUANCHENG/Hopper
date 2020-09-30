@@ -23,8 +23,43 @@ class Reader(Base):
 
     def read(self):
         for file in self.file_list:
-            self.content = np.concatenate((self.content, np.loadtxt(file)), axis = 0) if self.content.size else np.loadtxt(file)
-        self.content = np.array([row for row in self.content if row[0] != 0])
+            if self.content.size:
+                new_data = np.loadtxt(file)
+                if self.content.shape[1] == new_data.shape[1]:
+                    self.content = np.concatenate((self.content, new_data), axis = 0)
+                else:
+                    print("changing format\n")
+                    self.padding(new_data)
+            else:
+                self.content = np.loadtxt(file) 
+        self.content = np.array([row for row in self.content if row[0] > 2])
+
+    def padding(self, new_data):
+        if self.content.shape[1] > new_data.shape[1]:
+            padded = np.zeros((new_data.shape[0], self.content.shape[1]))
+            padded[:] = np.NaN
+            padded[:new_data.shape[0], :new_data.shape[1]] = new_data
+            self.content = np.concatenate((self.content, padded), axis = 0)
+        else:
+            padded = np.zeros((self.content.shape[0], new_data.shape[1] ))
+            padded[:] = np.NaN
+            padded[:self.content.shape[0], :self.content.shape[1]] = self.content
+            self.content = np.concatenate((padded, new_data), axis = 0)
+
+
+    def pad(self, array, reference):
+        """
+        array: Array to be padded
+        reference: Reference array with the desired shape
+        offsets: list of offsets (number of elements must be equal to the dimension of the array)
+        """
+        # Create an array of zeros with the reference shape
+        result = np.zeros(reference.shape)
+        # Create a list of slices from offset to offset + shape in each dimension
+        insertHere = [slice(offset[dim], offset[dim] + array.shape[dim]) for dim in range(a.ndim)]
+        # Insert the array in the result at the specified offsets
+        result[insertHere] = a
+        return result
 
 class NewData:
     '''process new data'''
