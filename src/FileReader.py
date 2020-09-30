@@ -48,21 +48,6 @@ class Reader(Base):
             padded[:self.content.shape[0], :self.content.shape[1]] = self.content
             self.content = np.concatenate((padded, new_data), axis = 0)
 
-
-    def pad(self, array, reference):
-        """
-        array: Array to be padded
-        reference: Reference array with the desired shape
-        offsets: list of offsets (number of elements must be equal to the dimension of the array)
-        """
-        # Create an array of zeros with the reference shape
-        result = np.zeros(reference.shape)
-        # Create a list of slices from offset to offset + shape in each dimension
-        insertHere = [slice(offset[dim], offset[dim] + array.shape[dim]) for dim in range(a.ndim)]
-        # Insert the array in the result at the specified offsets
-        result[insertHere] = a
-        return result
-
 class NewData:
     '''process new data'''
     def __init__(self, content):
