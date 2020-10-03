@@ -6,7 +6,8 @@ from os import listdir
 from os.path import isfile, join
 from FileReader import NewData, OldData
 from Processor import Processor
-from Plotter import AngleDistribution, PlotCircle
+import Plotter
+#AngleDistribution, PlotCircle, AngleDistribution_shaded
 
 class NewInterface(NewData, Processor):
     pass
@@ -29,13 +30,13 @@ if __name__ == "__main__":
     old_interface = OldInterface(oldfiles)
     old_interface.cal_angles()
     concave_list = old_interface.pick_concave()
-    plotter = PlotCircle(concave_list)
+    plotter = Plotter.PlotCircle(concave_list)
     angle_data = old_interface.combine_angle_with_width()
     '''
 
     new_interface = NewInterface(newfiles)
     new_interface.cal_angles()
     angle_data = new_interface.combine_angle_with_width()
-    AngleDistribution(angle_data)
+    Plotter.AngleDistribution_shaded(angle_data)
     
 

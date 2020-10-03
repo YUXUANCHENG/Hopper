@@ -4,7 +4,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-#import seaborn as sns
+try:
+    import seaborn as sns
+except Exception as e:
+    print(e)
 
 class BasePlot:
     def show_plot(self):
@@ -63,7 +66,7 @@ class AngleDistribution_shaded(BasePlot):
     def show_plot(self, data_set):
         for key in data_set:
             data = [x/math.pi*180 for x in data_set[key]]
-            sns.distplot(x = data, hist = False, kde = True,
+            sns.distplot(data, hist = False, kde = True,
                  kde_kws = {'shade': True, 'linewidth': 3},
                  label = key)
         plt.xlabel('Angle', fontsize=18)
