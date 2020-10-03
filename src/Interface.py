@@ -37,6 +37,8 @@ if __name__ == "__main__":
     new_interface = NewInterface(newfiles)
     new_interface.cal_angles()
     angle_data = new_interface.combine_angle_with_width()
-    Plotter.AngleDistribution_shaded(angle_data)
+    Plotter.AngleDistribution(angle_data)
+    N_data = new_interface.combine_N_with_width()
+    Plotter.NDistribution(N_data)
     
 

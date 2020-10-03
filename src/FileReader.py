@@ -44,8 +44,8 @@ class Reader(Base):
             self.lines_per_file.append(len(new_data))
         
         # delete configurations with less than 3 partiles
-        self.deleted = [row[0] > 2 for row in self.content]
-        self.content = np.array([row for row in self.content if row[0] > 2])
+        self.deleted = [row[0] > 0 for row in self.content]
+        self.content = np.array([row for row in self.content if row[0] > 0])
 
     def padding(self, new_data):
         if self.content.shape[1] > new_data.shape[1]:

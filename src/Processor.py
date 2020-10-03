@@ -16,29 +16,30 @@ class Processor(metaclass=ABCMeta):
         for positions in self.position:
             position = []
             angles = []
-            # get data points
-            for (x, y, r) in np.reshape(positions,(-1,3)):
-                position.append([x, y])
-            position = np.array(position)
-            iter1 = iter(position)
-            iter2 = iter(position)
-            next(iter2)
-            vectors = []
-            # get vectors based on data points
-            for pos in iter2:
-                vectors.append(pos - next(iter1))
-            iter1 = iter(vectors)
-            iter2 = iter(vectors)
-            next(iter2)
-            # get angles based on vectors
-            for vector in iter2:
-                vector1 = next(iter1)
-                temp = Processor.angle_between(vector1, vector)
-                direction = Processor.cal_direction(vector1, vector)
-                if direction < 0:
-                    angles.append(math.pi - temp)
-                else:
-                    angles.append(math.pi + temp)
+            if len(positions) > 2:
+                # get data points
+                for (x, y, r) in np.reshape(positions,(-1,3)):
+                    position.append([x, y])
+                position = np.array(position)
+                iter1 = iter(position)
+                iter2 = iter(position)
+                next(iter2)
+                vectors = []
+                # get vectors based on data points
+                for pos in iter2:
+                    vectors.append(pos - next(iter1))
+                iter1 = iter(vectors)
+                iter2 = iter(vectors)
+                next(iter2)
+                # get angles based on vectors
+                for vector in iter2:
+                    vector1 = next(iter1)
+                    temp = Processor.angle_between(vector1, vector)
+                    direction = Processor.cal_direction(vector1, vector)
+                    if direction < 0:
+                        angles.append(math.pi - temp)
+                    else:
+                        angles.append(math.pi + temp)
             self.angles.append(angles)
 
     def pick_concave(self):
@@ -70,12 +71,25 @@ class Processor(metaclass=ABCMeta):
     def combine_angle_with_width(self):
         data_set = {}
         for index, angle in enumerate(self.angles):
+            if angle:
+                width = self.width[index]
+                if width in data_set:
+                    data_set[width] += angle
+                else:
+                    data_set[width] = angle
+        return data_set
+
+    def combine_N_with_width(self):
+        data_set = {}
+        for index, N in enumerate(self.N):
             width = self.width[index]
             if width in data_set:
-                data_set[width] += angle
+                data_set[width].append(N)
             else:
-                data_set[width] = angle
+                data_set[width] = [N]
         return data_set
+
+
 
 
 

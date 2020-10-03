@@ -74,3 +74,9 @@ class AngleDistribution_shaded(BasePlot):
         plt.xlim([80, 180])
         plt.show()
 
+class NDistribution(AngleDistribution):
+    def show_plot(self, data):
+        plt.hist(x = data, rwidth = 0.9, density =True, bins = [2, 3, 4, 5])
+        plt.xlabel('N', fontsize=18)
+        plt.ylabel('Density', fontsize=18)
+        plt.show()
