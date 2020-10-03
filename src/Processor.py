@@ -2,18 +2,18 @@
 # data processor class
 import numpy as np
 import math
-from FileReader import Reader, NewData, OldData
+from abc import ABCMeta, abstractproperty
 
-class Processor(Reader):
-    def __init__(self, file_list, data_type):
-        super().__init__(file_list)
-        self.data_type = data_type
-        self.data_processor = self.data_type(self.content, self.file_list, self.lines_per_file, self.deleted)
-        self.data_processor.check_dimension()
+class Processor(metaclass=ABCMeta):
+    def __init__(self, file_list):
         self.angles = []
 
+    #@abstractproperty
+    #def position():
+    #    pass
+
     def cal_angles(self):
-        for positions in self.data_processor.position:
+        for positions in self.position:
             position = []
             angles = []
             # get data points
@@ -48,7 +48,7 @@ class Processor(Reader):
         for (index, angle) in enumerate(self.angles):
             test = [x for x in angle if x > math.pi]
             if test:
-                concave.append(self.data_processor.position[index])
+                concave.append(self.position[index])
         return concave
 
     @staticmethod
