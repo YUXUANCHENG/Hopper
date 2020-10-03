@@ -8,7 +8,7 @@ class Processor(Reader):
     def __init__(self, file_list, data_type):
         super().__init__(file_list)
         self.data_type = data_type
-        self.data_processor = self.data_type(self.content)
+        self.data_processor = self.data_type(self.content, self.file_list, self.lines_per_file, self.deleted)
         self.data_processor.check_dimension()
         self.angles = []
 

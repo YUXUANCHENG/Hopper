@@ -1,5 +1,7 @@
 # Yuxuan Cheng
 # Classes for file reader
+# data obtained from http://www.physics.emory.edu/faculty/weeks/data/arches/
+
 
 import numpy as np
 
@@ -19,21 +21,29 @@ class Reader(Base):
     def __init__(self, file_list):
         super().__init__(file_list)
         self.content = np.array([])
+        self.file_list = file_list
+        self.lines_per_file = []
+        self.deleted = []
         self.read()
+        
 
     def read(self):
         for file in self.file_list:
+            new_data = np.loadtxt(file)
+            if len(new_data) == 0:
+                continue
             if self.content.size:
-                new_data = np.loadtxt(file)
-                if len(new_data) == 0:
-                    continue
                 if self.content.shape[1] == new_data.shape[1]:
                     self.content = np.concatenate((self.content, new_data), axis = 0)
                 else:
                     print("changing format")
                     self.padding(new_data)
             else:
-                self.content = np.loadtxt(file) 
+                self.content = new_data 
+            self.lines_per_file.append(len(new_data))
+        
+        # delete configurations with less than 3 partiles
+        self.deleted = [row[0] > 2 for row in self.content]
         self.content = np.array([row for row in self.content if row[0] > 2])
 
     def padding(self, new_data):
@@ -50,14 +60,20 @@ class Reader(Base):
 
 class NewData:
     '''process new data'''
-    def __init__(self, content):
+    def __init__(self, content, *args):
+        self.content = content
         self.n_trial = len(content)
         self.N = content[:, 0]
         if len(self.N) == 0:
             raise ValueError("empty data set!")
         self.N = np.array([int(x) for x in self.N])
         self.position = []
+        self.width = []
+        self.gravity = []
+        self.n_left = []
+        self.width = []
         self._get_position(content)
+        self._get_additional_info(content, *args)
 
     def _get_position(self, content):
         for (index, N_particle) in enumerate(self.N):
@@ -68,18 +84,29 @@ class NewData:
         if (len(self.position) != self.n_trial):
             raise ValueError("content dimensionos don't match")
 
+    def _get_additional_info(self, content, *args):
+        for index,file in enumerate(args[0]):
+            temp = file.split('-')
+            self.width += [int(temp[2][1:])/10] * args[1][index]
+        self.width = [entry for index, entry in enumerate(self.width) if args[2][index]]
+            
+
+
 
 class OldData(NewData):
     '''process old data'''
-    def __init__(self, content):
-        super().__init__(content)
-        self.gravity = content[:, 49]
-        self.n_left = content[:, 46]
-        self.width = content[:, 48]
+    #def __init__(self, content):
+    #    super().__init__(content)
+        
     
     def check_dimension(self):
         super().check_dimension()
         if (len(self.gravity) != self.n_trial or len(self.n_left) != self.n_trial or len(self.width) != self.n_trial):
             raise ValueError("content dimensionos don't match")
 
+    def _get_additional_info(self, content, *args):
+        self.width = content[:, 48]
+        self.gravity = content[:, 49]
+        self.n_left = content[:, 46]
+        self.width = content[:, 48]
 
