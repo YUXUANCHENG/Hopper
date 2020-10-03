@@ -37,7 +37,7 @@ class Reader(Base):
                 if self.content.shape[1] == new_data.shape[1]:
                     self.content = np.concatenate((self.content, new_data), axis = 0)
                 else:
-                    print("changing format")
+                    #print("changing format")
                     self.padding(new_data)
             else:
                 self.content = new_data 

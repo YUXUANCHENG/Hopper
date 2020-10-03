@@ -67,3 +67,17 @@ class Processor(metaclass=ABCMeta):
         v2 = np.append(v2, 0)
         return np.cross(v1, v2)[2]
 
+    def combine_angle_with_width(self):
+        data_set = {}
+        for index, angle in enumerate(self.angles):
+            width = self.width[index]
+            if width in data_set:
+                data_set[width] += angle
+            else:
+                data_set[width] = angle
+        return data_set
+
+
+
+
+

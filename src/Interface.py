@@ -4,16 +4,14 @@ import os
 import re
 from os import listdir
 from os.path import isfile, join
-from FileReader import Reader, NewData, OldData
+from FileReader import NewData, OldData
 from Processor import Processor
-from Plotter import PlotCircle
+from Plotter import AngleDistribution, PlotCircle
 
 class NewInterface(NewData, Processor):
     pass
 
 class OldInterface(OldData, Processor):
-    #def __init__(self, file_list): 
-    #    super().__init__(file_list)
     pass
 
 if __name__ == "__main__":
@@ -27,12 +25,17 @@ if __name__ == "__main__":
     oldfiles = [join(mypath, f) for f in listdir(mypath) if isfile(join(mypath, f)) and re.search(r'.*yale\.txt', f)]
     newfiles = [join(mypath, f) for f in listdir(mypath) if isfile(join(mypath, f)) and re.search(r'^sav.*\.txt', f)]
     # processing data
-    old_processor = OldInterface(oldfiles)
-    old_processor.cal_angles()
-    concave_list = old_processor.pick_concave()
+    '''
+    old_interface = OldInterface(oldfiles)
+    old_interface.cal_angles()
+    concave_list = old_interface.pick_concave()
     plotter = PlotCircle(concave_list)
+    angle_data = old_interface.combine_angle_with_width()
+    '''
 
-    new_processor = NewInterface(newfiles)
-    new_processor.cal_angles()
+    new_interface = NewInterface(newfiles)
+    new_interface.cal_angles()
+    angle_data = new_interface.combine_angle_with_width()
+    AngleDistribution(angle_data)
     
 
