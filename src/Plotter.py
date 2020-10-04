@@ -4,10 +4,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-try:
-    import seaborn as sns
-except Exception as e:
-    print(e)
+import seaborn as sns
 
 class BasePlot:
     def show_plot(self):
