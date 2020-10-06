@@ -89,6 +89,17 @@ class Processor(metaclass=ABCMeta):
                 data_set[width] = [N]
         return data_set
 
+    def combine_angle_with_N(self):
+        data_set = {}
+        for index, angle in enumerate(self.angles):
+            if angle:
+                N = self.N[index]
+                if N in data_set:
+                    data_set[N] += angle
+                else:
+                    data_set[N] = angle
+        return data_set
+
 
 
 

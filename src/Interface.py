@@ -39,7 +39,8 @@ if __name__ == "__main__":
     angle_data = new_interface.combine_angle_with_width()
     Plotter.AngleDistribution(angle_data)
     Plotter.AngleDistribution_shaded(angle_data)
-    N_data = new_interface.combine_N_with_width()
-    Plotter.NDistribution(N_data)
+    Plotter.NDistribution(new_interface.combine_N_with_width())
+    Plotter.AngleDistributionVSN(new_interface.combine_angle_with_N())
+    Plotter.AngleDistributionVSN_shaded(new_interface.combine_angle_with_N())
     
 

@@ -7,8 +7,68 @@ import math
 import seaborn as sns
 
 class BasePlot:
+    def add_title(self,title):
+        raise NotImplementedError 
     def show_plot(self):
         raise NotImplementedError 
+
+class AngleDistribution(BasePlot):
+    def __init__(self, data_set):
+        if len(data_set) == 0:
+            raise ValueError("empty circle list!")
+        for key in data_set:
+            self.add_title(key) 
+            self.add_data(data_set[key])
+            self.show_plot()
+
+    def add_title(self, title):
+        plt.title('Width: {}'.format(title), fontsize=18)
+
+    def add_data(self, data):
+        data = [x/math.pi*180 for x in data]
+        plt.hist(x = data, bins = 15, rwidth = 0.9, density =True)   
+
+    def show_plot(self):
+        plt.xlabel('Angle', fontsize=18)
+        plt.ylabel('Density', fontsize=18)
+        plt.xlim([80, 180])
+        plt.show()
+
+class AngleDistribution_shaded(AngleDistribution):
+    def __init__(self, data_set):
+        if len(data_set) == 0:
+            raise ValueError("empty data set!")
+        for key in data_set:
+            self.add_data(data_set[key], key)
+        self.show_plot()
+
+    def add_data(self, data, key):
+        data = [x/math.pi*180 for x in data]
+        sns.distplot(data, hist = False, kde = True,
+                kde_kws = {'shade': True, 'linewidth': 3},
+                label = key)
+
+
+class NDistribution(AngleDistribution):
+    def add_data(self, data):
+        plt.hist(x = data, rwidth = 0.9, density =True, bins = [2, 3, 4, 5])
+
+    def show_plot(self):
+        plt.xlabel('N', fontsize=18)
+        plt.ylabel('Density', fontsize=18)
+        plt.show()
+
+class AngleDistributionVSN(AngleDistribution):
+
+    def add_title(self, title):
+        plt.title('N: {}'.format(title), fontsize=18)
+
+    def add_data(self, data):
+        data = [x/math.pi*180 for x in data]
+        plt.hist(x = data, bins = 10, rwidth = 0.9, density =True)
+
+class AngleDistributionVSN_shaded(AngleDistribution_shaded):
+    pass
 
 
 class PlotCircle(BasePlot):
@@ -36,44 +96,4 @@ class PlotCircle(BasePlot):
         for patch in self.circles:
             self.ax.add_patch(patch)
         plt.axis('scaled')
-        plt.show()
-
-class AngleDistribution(BasePlot):
-    def __init__(self, data_set):
-        if len(data_set) == 0:
-            raise ValueError("empty circle list!")
-        for key in data_set:
-            plt.title('Width: {}'.format(key), fontsize=18)
-            self.show_plot(data_set[key])
-
-    def show_plot(self, data):
-        data = [x/math.pi*180 for x in data]
-        plt.hist(x = data, bins = 15, rwidth = 0.9, density =True)
-        plt.xlabel('Angle', fontsize=18)
-        plt.ylabel('Density', fontsize=18)
-        plt.xlim([80, 180])
-        plt.show()
-
-class AngleDistribution_shaded(BasePlot):
-    def __init__(self, data_set):
-        if len(data_set) == 0:
-            raise ValueError("empty circle list!")
-        self.show_plot(data_set)
-
-    def show_plot(self, data_set):
-        for key in data_set:
-            data = [x/math.pi*180 for x in data_set[key]]
-            sns.distplot(data, hist = False, kde = True,
-                 kde_kws = {'shade': True, 'linewidth': 3},
-                 label = key)
-        plt.xlabel('Angle', fontsize=18)
-        plt.ylabel('Density', fontsize=18)
-        plt.xlim([80, 180])
-        plt.show()
-
-class NDistribution(AngleDistribution):
-    def show_plot(self, data):
-        plt.hist(x = data, rwidth = 0.9, density =True, bins = [2, 3, 4, 5])
-        plt.xlabel('N', fontsize=18)
-        plt.ylabel('Density', fontsize=18)
         plt.show()
