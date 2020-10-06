@@ -88,8 +88,16 @@ class NewData(Reader):
     def _get_additional_info(self):
         for index,file in enumerate(self.file_list):
             temp = file.split('-')
+            # extract width from file name
             self.width += [int(temp[2][1:])/10] * self.lines_per_file[index]
+            # extract g from file name
+            number_index = [index for index, c in enumerate(temp[3]) if c.isdigit()]
+            g = int(temp[3][number_index[0]: number_index[-1] + 1]) * pow(10, -len(number_index) + 1)
+            self.gravity += [g] * self.lines_per_file[index]
+
+        # delete empty lines    
         self.width = [entry for index, entry in enumerate(self.width) if self.deleted[index]]
+        self.gravity = [entry for index, entry in enumerate(self.gravity) if self.deleted[index]]
             
 
 
@@ -106,7 +114,6 @@ class OldData(NewData):
             raise ValueError("content dimensionos don't match")
 
     def _get_additional_info(self):
-        self.width = self.content[:, 48]
         self.gravity = self.content[:, 49]
         self.n_left = self.content[:, 46]
         self.width = self.content[:, 48]
