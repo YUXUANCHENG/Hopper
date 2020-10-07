@@ -11,6 +11,8 @@ class BasePlot:
         raise NotImplementedError 
     def show_plot(self):
         raise NotImplementedError 
+    def add_data(self, data):
+        raise NotImplementedError 
 
 class AngleDistribution(BasePlot):
     def __init__(self, data_set):
@@ -32,6 +34,7 @@ class AngleDistribution(BasePlot):
         plt.xlabel('Angle', fontsize=18)
         plt.ylabel('Density', fontsize=18)
         plt.xlim([80, 180])
+        plt.legend()
         plt.show()
 
 class AngleDistribution_shaded(AngleDistribution):
@@ -47,6 +50,7 @@ class AngleDistribution_shaded(AngleDistribution):
         sns.distplot(data, hist = False, kde = True,
                 kde_kws = {'shade': True, 'linewidth': 3},
                 label = key)
+        
 
 
 class NDistribution(AngleDistribution):
