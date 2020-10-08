@@ -69,6 +69,8 @@ class Processor(metaclass=ABCMeta):
         return np.cross(v1, v2)[2]
 
     def combine_angle_with_width(self):
+        if len(self.angles) != len(self.width):
+            raise ValueError("Dimensions don't agree!")
         data_set = {}
         for index, angle in enumerate(self.angles):
             if angle:
@@ -80,6 +82,8 @@ class Processor(metaclass=ABCMeta):
         return data_set
 
     def combine_N_with_width(self):
+        if len(self.N) != len(self.width):
+            raise ValueError("Dimensions don't agree!")
         data_set = {}
         for index, N in enumerate(self.N):
             width = self.width[index]
@@ -90,6 +94,8 @@ class Processor(metaclass=ABCMeta):
         return data_set
 
     def combine_angle_with_N(self):
+        if len(self.N) != len(self.angles):
+            raise ValueError("Dimensions don't agree!")
         data_set = {}
         for index, angle in enumerate(self.angles):
             if angle:
@@ -100,6 +106,22 @@ class Processor(metaclass=ABCMeta):
                     data_set[N] = angle
         return data_set
 
+    def combine_angle_with_N_and_g(self):
+        if len(self.gravity) != len(self.angles):
+            raise ValueError("Dimensions don't agree!")
+        data_set = {}
+        for index, angle in enumerate(self.angles):
+            if angle:
+                N = self.N[index]
+                g = self.gravity[index]
+                if (N, g) in data_set:
+                    data_set[(N, g)] += angle
+                else:
+                    data_set[(N, g)] = angle
+        return data_set
+
+    def deviation_of_angles(self):
+        pass
 
 
 

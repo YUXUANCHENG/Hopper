@@ -34,7 +34,6 @@ class AngleDistribution(BasePlot):
         plt.xlabel('Angle', fontsize=18)
         plt.ylabel('Density', fontsize=18)
         plt.xlim([80, 180])
-        plt.legend()
         plt.show()
 
 class AngleDistribution_shaded(AngleDistribution):
@@ -50,6 +49,7 @@ class AngleDistribution_shaded(AngleDistribution):
         sns.distplot(data, hist = False, kde = True,
                 kde_kws = {'shade': True, 'linewidth': 3},
                 label = key)
+        plt.legend()
         
 
 
@@ -73,6 +73,17 @@ class AngleDistributionVSN(AngleDistribution):
 
 class AngleDistributionVSN_shaded(AngleDistribution_shaded):
     pass
+
+class AngleGravityN_shaded(AngleDistribution_shaded):
+    def add_data(self, data, key):
+        if key[0] == 3 and len(data) > 10:
+            data = [x/math.pi*180 for x in data]
+            sns.distplot(data, hist = False, kde = True,
+                    kde_kws = {'shade': True, 'linewidth': 3},
+                    #label = "N: {}, g: {}".format(key[0], key[1]))
+                    label = "g: {}".format(key[1]))
+        plt.legend()
+
 
 
 class PlotCircle(BasePlot):

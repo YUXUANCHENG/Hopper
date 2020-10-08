@@ -42,5 +42,6 @@ if __name__ == "__main__":
     Plotter.NDistribution(new_interface.combine_N_with_width())
     Plotter.AngleDistributionVSN(new_interface.combine_angle_with_N())
     Plotter.AngleDistributionVSN_shaded(new_interface.combine_angle_with_N())
+    Plotter.AngleGravityN_shaded(new_interface.combine_angle_with_N_and_g())
     
 
