@@ -16,7 +16,7 @@ class Processor(metaclass=ABCMeta):
         for positions in self.position:
             position = []
             angles = []
-            if len(positions) > 2:
+            if len(positions) > 2 * 3:
                 # get data points
                 for (x, y, r) in np.reshape(positions,(-1,3)):
                     position.append([x, y])

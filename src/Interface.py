@@ -26,13 +26,13 @@ if __name__ == "__main__":
     oldfiles = [join(mypath, f) for f in listdir(mypath) if isfile(join(mypath, f)) and re.search(r'.*yale\.txt', f)]
     newfiles = [join(mypath, f) for f in listdir(mypath) if isfile(join(mypath, f)) and re.search(r'^sav.*\.txt', f)]
     # processing data
-    '''
+    
     old_interface = OldInterface(oldfiles)
     old_interface.cal_angles()
     concave_list = old_interface.pick_concave()
     plotter = Plotter.PlotCircle(concave_list)
-    angle_data = old_interface.combine_angle_with_width()
-    '''
+    #Plotter.AngleDistribution_shaded(old_interface.combine_angle_with_width())
+    
 
     new_interface = NewInterface(newfiles)
     new_interface.cal_angles()
