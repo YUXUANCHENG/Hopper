@@ -68,56 +68,43 @@ class Processor(metaclass=ABCMeta):
         v2 = np.append(v2, 0)
         return np.cross(v1, v2)[2]
 
-    def __combine_two_parameters(self, arg1, arg2):
-        if len(arg1) != len(arg2):
-            raise ValueError("Dimensions don't agree!")
+    def __combine_parameters(self, arg1, *args):
+        for key in args:
+            if len(arg1) != len(key):
+                raise ValueError("Dimensions don't agree!")
         data_set = {}
         for index, data1 in enumerate(arg1):
             if data1:
-                data2 = arg2[index]
-                if data2 in data_set:
+                if len(args) == 1:
+                    keys = args[0][index]
+                else:
+                    keys = []
+                    for key in args:
+                        keys.append(key[index])
+                    keys = tuple(keys)
+                if keys in data_set:
                     if type(data1) is list:
-                        data_set[data2] += data1
+                        data_set[keys] += data1
                     else:
-                        data_set[data2].append(data1)
+                        data_set[keys].append(data1)
                 else:
                     if type(data1) is list:
-                        data_set[data2] = data1
+                        data_set[keys] = data1
                     else:
-                        data_set[data2] = [data1]
+                        data_set[keys] = [data1]
         return data_set
 
     def combine_angle_with_width(self):
-        return self.__combine_two_parameters(self.angles, self.width)
+        return self.__combine_parameters(self.angles, self.width)
 
     def combine_N_with_width(self):
-        return self.__combine_two_parameters(self.N, self.width)
+        return self.__combine_parameters(self.N, self.width)
 
     def combine_angle_with_N(self):
-        return self.__combine_two_parameters(self.angles, self.N)
-
-    def __combine_three_parameters(self, arg1, arg2, arg3):
-        if len(arg1) != len(arg2) != len(arg3):
-            raise ValueError("Dimensions don't agree!")
-        data_set = {}
-        for index, data1 in enumerate(arg1):
-            if data1:
-                data2 = arg2[index]
-                data3 = arg3[index]
-                if (data2, data3) in data_set:
-                    if type(data1) is list:
-                        data_set[(data2, data3)] += data1
-                    else:
-                        data_set[(data2, data3)].append(data1)
-                else:
-                    if type(data1) is list:
-                        data_set[(data2, data3)] = data1
-                    else:
-                        data_set[(data2, data3)] = [data1]
-        return data_set
+        return self.__combine_parameters(self.angles, self.N)
 
     def combine_angle_with_N_and_g(self):
-        return self.__combine_three_parameters(self.angles, self.N, self.gravity)
+        return self.__combine_parameters(self.angles, self.N, self.gravity)
 
     def deviation_of_angles(self):
         pass
